@@ -1,0 +1,8 @@
+{
+  "name": "aoc-2022",
+  "version": "1.0.0",
+  "author": "Viktor Karpov <viktor.s.karpov@gmail.com>",
+  "private": true,
+  "type": "module",
+  "license": "MIT"
+}
