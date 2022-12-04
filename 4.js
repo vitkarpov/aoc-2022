@@ -25,10 +25,13 @@ function part2() {
 console.log(part2());
 
 function read() {
-  return fs.readFileSync('day4.txt', 'utf-8').split('\n').map((line) => {
-    const [one, two] = line.split(',');
-    const coords1 = one.split('-').map(Number);
-    const coords2 = two.split('-').map(Number);
-    return [new Interval(coords1), new Interval(coords2)];
-  });
+  return fs.readFileSync('day4.txt', 'utf-8')
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => {
+      const [one, two] = line.split(',');
+      const coords1 = one.split('-').map(Number);
+      const coords2 = two.split('-').map(Number);
+      return [new Interval(coords1), new Interval(coords2)];
+    });
 }
