@@ -8,14 +8,14 @@ class Interval {
   contains(interval) {
     return this.l <= interval.l && this.r >= interval.r;
   }
-  overlap(interval) {
+  overlaps(interval) {
     return Math.max(this.l, interval.l) <= Math.min(this.r, interval.r);
   }
 }
 
 function part2() {
   return read().reduce((acc, intervals) => {
-    if (intervals[0].overlap(intervals[1])) {
+    if (intervals[0].overlaps(intervals[1])) {
       acc += 1;
     }
     return acc;
