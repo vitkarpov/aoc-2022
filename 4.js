@@ -8,20 +8,21 @@ class Interval {
   contains(interval) {
     return this.l <= interval.l && this.r >= interval.r;
   }
+  overlap(interval) {
+    return Math.max(this.l, interval.l) <= Math.min(this.r, interval.r);
+  }
 }
 
-function part1() {
+function part2() {
   return read().reduce((acc, intervals) => {
-    if (intervals[0].contains(intervals[1])) {
-      acc += 1;
-    } else if (intervals[1].contains(intervals[0])) {
+    if (intervals[0].overlap(intervals[1])) {
       acc += 1;
     }
     return acc;
   }, 0)
 }
 
-console.log(part1());
+console.log(part2());
 
 function read() {
   return fs.readFileSync('day4.txt', 'utf-8').split('\n').map((line) => {
