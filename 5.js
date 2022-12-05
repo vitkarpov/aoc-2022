@@ -1,18 +1,18 @@
 import fs from 'fs'
 
-function part1() {
+function part2() {
   const stacks = readStacks();
   const moves = readMoves();
 
   for (const move of moves) {
-    for (let i = 0; i < move.count; i++) {
-      stacks[move.to].push(stacks[move.from].pop());
-    }
+    const load = stacks[move.from].slice(-move.count);
+    stacks[move.to].push(...load);
+    stacks[move.from].splice(-move.count, move.count);
   }
   return stacks.map((st) => st[st.length - 1]).join('');
 }
 
-console.log(part1())
+console.log(part2())
 
 function readStacks() {
   return fs.readFileSync('day5-crates.txt', 'utf-8')
