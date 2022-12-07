@@ -8,7 +8,7 @@ class Node {
   }
 }
 
-function part1() {
+function part2() {
   function calcSize(root) {
     if (root.children.length === 0) {
       return root.val.size;
@@ -16,20 +16,27 @@ function part1() {
     root.val.size = root.children.reduce((acc, next) => acc + calcSize(next), 0)
     return root.val.size;
   }
-  function howManyUnderLimitSize(root, limit) {
+  let minSizeToDelete = Infinity;
+  function dfs(root) {
     if (root.val.type === 'file') {
-      return 0;
+      return;
     }
-    const size = root.val.size <= limit ? root.val.size : 0;
-    return size + root.children.reduce((acc, next) => acc + howManyUnderLimitSize(next, limit), 0);
+    if (unusedNow + root.val.size >= unusedRequired) {
+      minSizeToDelete = Math.min(minSizeToDelete, root.val.size);
+    }
+    root.children.forEach(dfs);
   }
 
   const root = buildFileTree().children[0];
   calcSize(root);
-  return howManyUnderLimitSize(root, 100000);
+  const total = 70000000;
+  const unusedRequired = 30000000;
+  const unusedNow = total - root.val.size;
+  dfs(root);
+  return minSizeToDelete;
 }
 
-console.log(part1());
+console.log(part2());
 
 function buildFileTree() {
   const root = new Node();
