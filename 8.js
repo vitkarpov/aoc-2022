@@ -4,44 +4,43 @@ function read() {
   return fs.readFileSync('day8.txt', 'utf-8').split('\n').map((line) => line.split('').map(Number));
 }
 
-function part1() {
+function part2() {
   const grid = read();
   const W = grid[0].length;
   const H = grid.length;
-  let result = 2 * (grid.length + grid[0].length - 2);
 
-  function checkTop(y, x) {
+  function scoreTop(y, x) {
     for (let i = y - 1; i >= 0; i--) {
-      if (grid[i][x] >= grid[y][x]) return false;
+      if (grid[i][x] >= grid[y][x]) return Math.abs(i - y);
     }
-    return true;
+    return y;
   }
-  function checkBottom(y, x) {
+  function scoreBottom(y, x) {
     for (let i = y + 1; i < H; i++) {
-      if (grid[i][x] >= grid[y][x]) return false;
+      if (grid[i][x] >= grid[y][x]) return Math.abs(i - y);
     }
-    return true;
+    return H - y - 1;
   }
-  function checkLeft(y, x) {
+  function scoreLeft(y, x) {
     for (let i = x - 1; i >= 0; i--) {
-      if (grid[y][i] >= grid[y][x]) return false;
+      if (grid[y][i] >= grid[y][x]) return Math.abs(i - x);
     }
-    return true;
+    return x;
   }
-  function checkRight(y, x) {
+  function scoreRight(y, x) {
     for (let i = x + 1; i < W; i++) {
-      if (grid[y][i] >= grid[y][x]) return false;
+      if (grid[y][i] >= grid[y][x]) return Math.abs(i - x);
     }
-    return true;
+    return W - x - 1;
   }
 
+  let maxScore = 0;
   for (let i = 1; i < H - 1; i++) {
     for (let j = 1; j < W - 1; j++) {
-      if (checkTop(i, j) || checkLeft(i, j) || checkRight(i, j) || checkBottom(i, j)) {
-        result++;
-      }
+      const score = scoreTop(i, j) * scoreLeft(i, j) * scoreRight(i, j) * scoreBottom(i, j);
+      maxScore = Math.max(maxScore, score);
     }
   }
-  return result;
+  return maxScore;
 }
-console.log(part1());
+console.log(part2());
