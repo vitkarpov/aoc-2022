@@ -7,23 +7,27 @@ function read() {
   });
 }
 
-function part1() {
+function part2() {
   const v = new Set();
   const H = { x: 0, y: 0 };
-  const T = { x: 0, y: 0 };
-  v.add(k(T));
+  const knots = new Array(9).fill(0).map(() => ({ x: 0, y: 0 }));
+  knots.push(H);
   for (const { dir, move } of read()) {
     for (let i = 0; i < move; i++) {
-      moveHead(H, dir);
-      if (Math.abs(H.x - T.x) > 1 || Math.abs(H.y - T.y) > 1) {
-        moveTail(H, T, dir);
+      moveHead(knots[knots.length - 1], dir);
+      for (let j = knots.length - 1; j > 0; j--) {
+        const H = knots[j];
+        const T = knots[j - 1];
+        if (Math.abs(H.x - T.x) > 1 || Math.abs(H.y - T.y) > 1) {
+          moveTail(H, T, dir);
+        }
       }
-      v.add(k(T));
+      v.add(k(knots[0]));
     }
   }
   return v.size;
 }
-console.log(part1());
+console.log(part2());
 
 
 function moveHead(H, dir) {
