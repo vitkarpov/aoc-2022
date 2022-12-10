@@ -4,18 +4,19 @@ function read() {
   return fs.readFileSync('day10.txt', 'utf-8').split('\n').map((line) => line.split(' '));
 }
 
-function part1() {
+function part2() {
   const commands = read().reverse();
-  let cycle = 1;
+  let cycle = 0;
   let x = 1;
-  const interesting = [20, 60, 100, 140, 180, 220];
-  const signals = [];
+  const screen = [];
 
   while (commands.length) {
     const [command, v] = commands.pop();
-    if (interesting.some((v) => v === cycle)) {
-      signals.push(x);
+    if (cycle % 40 === 0) {
+      screen.push([]);
     }
+    const pixel = Math.abs(x - cycle % 40) < 2 ? 'X' : '.';
+    screen[screen.length - 1].push(pixel);
     if (command === 'noop') {
       cycle += 1;
     } else if (command === 'addx') {
@@ -28,7 +29,7 @@ function part1() {
       throw new Error('Unknown command');
     }
   }
-  return interesting.map((v, idx) => v * signals[idx]).reduce((acc, v) => acc + v, 0);
+  return screen.map((line) => line.join('')).join('\n');
 }
 
-console.log(part1());
+console.log(part2());
