@@ -3,10 +3,14 @@ import fs from 'fs'
 class Monkey {
   inspected = 0;
 
-  constructor(items, operationFn, testFn) {
+  constructor(items, operationFn, test) {
     this.items = items;
     this.operationFn = operationFn;
-    this.testFn = testFn;
+    this.test = test;
+  }
+
+  testFn(v) {
+    return v % this.test[0] === 0 ? this.test[1] : this.test[2];
   }
 }
 
@@ -36,18 +40,19 @@ class Parser {
     const ifTrue = parseInt(lines[1].split(' ').pop(), 10);
     const ifFalse = parseInt(lines[0].split(' ').pop(), 10);
 
-    return (v) => v % by === 0 ? ifTrue : ifFalse;
+    return [by, ifTrue, ifFalse];
   }
 }
 
 function part1() {
   const parser = new Parser();
   const monkeys = parser.run(fs.readFileSync('day11.txt', 'utf-8'));
+  const N = monkeys.reduce((acc, m) => acc * m.test[0], 1);
 
-  for (let round = 1; round <= 20; round++) {
+  for (let round = 1; round <= 10000; round++) {
     for (const monkey of monkeys) {
       for (const item of monkey.items) {
-        const wl = Math.floor(monkey.operationFn(item) / 3);
+        const wl = monkey.operationFn(item) % N;
         monkeys[monkey.testFn(wl)].items.push(wl);
       }
       monkey.inspected += monkey.items.length;
