@@ -15,7 +15,14 @@ function part1() {
   m[sY][sX] = 'a';
   m[eY][eX] = 'z';
   const d = (y1, x1, y2, x2) => m[y2][x2].charCodeAt(0) - m[y1][x1].charCodeAt(0);
-  const q = [{ x: sX, y: sY, len: 0 }];
+  const q = m.reduce((acc, line, y) => {
+    return acc.concat(line.reduce((acc, ch, x) => {
+      if (ch === 'a') {
+        acc.push({ x, y, len: 0 });
+      }
+      return acc;
+    }, []))
+  }, []);
   const visited = new Set();
 
   while (q.length > 0) {
