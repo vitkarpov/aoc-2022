@@ -20,6 +20,15 @@ function part1() {
   return acc;
 }
 
+function part2() {
+  const packets = read().concat([[[2]], [[6]]]);
+  packets.sort(compare).reverse();
+  const i = packets.findIndex((v) => k(v) === '[[2]]');
+  const j = packets.findIndex((v) => k(v) === '[[6]]');
+
+  return (i + 1) * (j + 1);
+}
+
 function compare(l, r) {
   if (Array.isArray(l) && !Array.isArray(r)) {
     return compare(l, [r]);
@@ -41,4 +50,11 @@ function compare(l, r) {
   return 0;
 }
 
-console.log(part1());
+function k(arr) {
+  if (Array.isArray(arr)) {
+    return `[${arr.map((v) => k(v)).join(',')}]`;
+  }
+  return arr;
+}
+
+console.log(part2());
