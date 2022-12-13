@@ -3,7 +3,7 @@ import fs from 'fs';
 function read() {
   return fs.readFileSync('day13.txt', 'utf-8').split('\n').reduce((acc, line) => {
     if (line) {
-      acc.push(eval(line));
+      acc.push(JSON.parse(line));
     }
     return acc;
   }, [])
