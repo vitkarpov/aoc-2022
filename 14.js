@@ -7,7 +7,7 @@ function read() {
   }))
 }
 
-function part1() {
+function part2() {
   const paths = read();
   const m = new Set();
   let maxY = 0;
@@ -28,7 +28,7 @@ function part1() {
     }
   }
   function drop(x, y) {
-    while (y < maxY) {
+    while (y < maxY + 1) {
       let hasMoved = false;
       for (let [dx, dy] of [[0, 1], [-1, 1], [1, 1]]) {
         if (!m.has(k({ x: x + dx, y: y + dy }))) {
@@ -39,21 +39,21 @@ function part1() {
         }
       }
       if (!hasMoved) {
-        return {x, y};
+        return { x, y };
       }
     }
-    return null;
+    return { x, y };
   }
-  let count = 0;
 
+  let count = 0;
   const s = {x: 500, y: 0};
   while (true) {
     const next = drop(s.x, s.y);
-    if (!next) {
-      return count;
-    }
     count++;
     m.add(k(next));
+    if (next.x === s.x && next.y === s.y) {
+      return count;
+    }
   }
 }
 
@@ -61,4 +61,4 @@ function k(p) {
   return `${p.x},${p.y}`;
 }
 
-console.log(part1())
+console.log(part2())
