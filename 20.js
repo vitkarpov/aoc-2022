@@ -13,44 +13,46 @@ function read(input) {
   return input.split('\n').map(Number);
 }
 
-function part1(input) {
-  const nums = read(input);
+function part2(input) {
+  const nums = read(input).map((v) => v * 811589153);
   const head = createList(nums);
   const copy = createList(nums);
 
-  forEach(copy, nums.length, (v) => {
-    let curr = find(head, v);
-    let a = curr.prev;
-    let b = curr.next;
+  for (let i = 0; i < 10; i++) {
+    forEach(copy, nums.length, (v) => {
+      let curr = find(head, v);
+      let a = curr.prev;
+      let b = curr.next;
 
-    if (curr.val === 4) {
-      debugger;
-    }
-
-    // remove current
-    curr.prev.next = curr.next;
-    curr.next.prev = curr.prev;
-
-    // move
-    const steps = curr.val % (nums.length - 1);
-    if (steps > 0) {
-      for (let i = 0; i < steps; i++) {
-        a = a.next;
-        b = b.next;
+      if (curr.val === 4) {
+        debugger;
       }
-    } else {
-      for (let i = 0; i < -steps; i++) {
-        a = a.prev;
-        b = b.prev;
-      }
-    }
 
-    // insert into new position
-    a.next = curr;
-    curr.prev = a
-    b.prev = curr;
-    curr.next = b;
-  })
+      // remove current
+      curr.prev.next = curr.next;
+      curr.next.prev = curr.prev;
+
+      // move
+      const steps = curr.val % (nums.length - 1);
+      if (steps > 0) {
+        for (let i = 0; i < steps; i++) {
+          a = a.next;
+          b = b.next;
+        }
+      } else {
+        for (let i = 0; i < -steps; i++) {
+          a = a.prev;
+          b = b.prev;
+        }
+      }
+
+      // insert into new position
+      a.next = curr;
+      curr.prev = a
+      b.prev = curr;
+      curr.next = b;
+    })
+  }
 
   let curr = head;
   while (curr.val !== 0) {
@@ -105,5 +107,5 @@ function print(head, len) {
   console.log(result.join(','));
 }
 
-assert(part1(test) === 3, 'part1');
-console.log(part1(fs.readFileSync('day20.txt', 'utf-8')));
+assert(part2(test) === 1623178306, 'part2');
+console.log(part2(fs.readFileSync('day20.txt', 'utf-8')));
