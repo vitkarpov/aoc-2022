@@ -36,7 +36,7 @@ function dfs(ore_r, clay_r, obsidian_r, geode_r, ore, clay, obsidian, geode, min
   // build geode robot
   let result = 0;
   if (ore >= blueprint.geode.ore && obsidian >= blueprint.geode.obsidian) {
-    result = Math.max(result, dfs(
+    return dfs(
       ore_r,
       clay_r,
       obsidian_r,
@@ -48,7 +48,7 @@ function dfs(ore_r, clay_r, obsidian_r, geode_r, ore, clay, obsidian, geode, min
       minutes - 1,
       blueprint,
       dp
-    ))
+    )
   }
   // build obsidian robot
   if (ore >= blueprint.obsidian.ore && clay >= blueprint.obsidian.clay) {
@@ -118,15 +118,25 @@ function dfs(ore_r, clay_r, obsidian_r, geode_r, ore, clay, obsidian, geode, min
   return result;
 }
 
-function part1(input, minutes) {
+function part1(input) {
+  const minutes = 24;
   return read(input).reduce((acc, blueprint, idx) => {
     return acc + (idx + 1) * dfs(1, 0, 0, 0, 0, 0, 0, 0, minutes, blueprint, new Map());
   }, 0)
+}
+
+function part2(input) {
+  const minutes = 32;
+  return read(input).slice(0,3).reduce((acc, blueprint) => {
+    return acc * dfs(1, 0, 0, 0, 0, 0, 0, 0, minutes, blueprint, new Map());
+  }, 1)
 }
 
 function k(...args) {
   return args.join(',');
 }
 
-assert(part1(test, 24) === 33, 'part 1');
-console.log(part1(fs.readFileSync('day19.txt', 'utf-8'), 24))
+assert(part1(test) === 33, 'part 1');
+console.log(part1(fs.readFileSync('day19.txt', 'utf-8')))
+
+console.log(part2(fs.readFileSync('day19.txt', 'utf-8')))
