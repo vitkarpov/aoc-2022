@@ -24,10 +24,6 @@ function part2(input) {
       let a = curr.prev;
       let b = curr.next;
 
-      if (curr.val === 4) {
-        debugger;
-      }
-
       // remove current
       curr.prev.next = curr.next;
       curr.next.prev = curr.prev;
