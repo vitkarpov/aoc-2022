@@ -1,34 +1,30 @@
 import { assert } from 'console';
 import fs from 'fs';
 
-const test = `root: pppw + sjmn
-dbpl: 5
-cczh: sllz + lgvd
-zczc: 2
-ptdq: humn - dvpt
-dvpt: 3
-lfqf: 4
-humn: 5
-ljgn: 2
-sjmn: drzm * dbpl
-sllz: 4
-pppw: cczh / lfqf
-lgvd: ljgn * ptdq
-drzm: hmdt - zczc
-hmdt: 32`;
-
-function part1(input) {
+function part2(input) {
   const tree = read(input);
-  return dfs(tree, 'root');
+  let l = 1e12
+  let r = 1e13
+  while (l < r) {
+    const m = l / 2 + r / 2;
+    const v = dfs(tree, 'root', m);
+    if (v < 0) {
+      r = m;
+    } else if (v > 0) {
+      l = m;
+    } else {
+      return m;
+    }
+  }
+  assert(false);
 }
 
-assert(part1(test) === 152, 'part 1');
-console.log(part1(fs.readFileSync('day21.txt', 'utf-8')));
+console.log(part2(fs.readFileSync('day21.txt', 'utf-8')));
 
 function read(input) {
   return input.split('\n').reduce((acc, line) => {
     const [node, rest] = line.split(': ');
-    const g = /^(.+) ([+\-*\/]) (.+)$/.exec(rest);
+    const g = /^(.+) ([+\-*\/=]) (.+)$/.exec(rest);
     if (!g) {
       assert(!acc[node]);
       acc[node] = {
@@ -45,21 +41,31 @@ function read(input) {
   }, {});
 }
 
-function dfs(tree, id) {
+function dfs(tree, id, humn) {
   const root = tree[id];
+  if (id === 'root') {
+    const l = dfs(tree, root.left, humn);
+    const r = dfs(tree, root.right, humn);
+    if (l > r) return 1;
+    if (l < r) return -1;
+    if (l === r) return 0;
+  }
+  if (id === 'humn') {
+    return humn;
+  }
   if (root.val) {
     return root.val;
   }
   switch (root.op) {
     case '+':
-      return dfs(tree, root.left) + dfs(tree, root.right);
+      return dfs(tree, root.left, humn) + dfs(tree, root.right, humn);
     case '-':
-      return dfs(tree, root.left) - dfs(tree, root.right);
+      return dfs(tree, root.left, humn) - dfs(tree, root.right, humn);
     case '*':
-      return dfs(tree, root.left) * dfs(tree, root.right);
+      return dfs(tree, root.left, humn) * dfs(tree, root.right, humn);
     case '/':
-      return dfs(tree, root.left) / dfs(tree, root.right);
+      return dfs(tree, root.left, humn) / dfs(tree, root.right, humn);
     default:
-      assert(false, 'unknown op')
+      assert(false, `unknown op: ${root.op}`)
   }
 }
